@@ -1,15 +1,30 @@
 #!/usr/bin/env bash
-# Creates a PID file, prints "To infinity and beyond", handles signals with custom messages
+# Creates a PID file, prints "To infinity and beyond", handles signals 
+PID_FILE="/var/run/myscript.pid"
 
-PIDFILE="/var/run/myscript.pid"
+echo "$$" > "$PID_FILE"
 
-trap 'echo "I hate the kill command"' SIGTERM
-trap 'echo "Y U no love me?!"' SIGINT
-trap 'rm -f "$PIDFILE"; exit' SIGQUIT SIGTERM
+term_handler() {
+    echo "I hate the kill command"
+    rm -f "$PID_FILE"
+    exit 0
+}
 
-echo $$ > "$PIDFILE"
+int_handler() {
+    echo "Y U no love me?!"
+}
 
-while true; do
+quit_handler() {
+    rm -f "$PID_FILE"
+    exit 0
+}
+
+trap term_handler SIGTERM
+trap int_handler SIGINT
+trap quit_handler SIGQUIT
+
+while true
+do
     echo "To infinity and beyond"
     sleep 2
 done
