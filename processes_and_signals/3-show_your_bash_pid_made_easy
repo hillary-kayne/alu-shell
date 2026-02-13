@@ -1,18 +1,8 @@
 #!/usr/bin/env bash
 # Displays PID and process name of processes whose command line contains "bash"
-
 for pid in /proc/[0-9]*; do
-    # skip if not a number
-    [[ ! $pid =~ /proc/[0-9]+ ]] && continue
-
-    # read the command line
-    cmd=$(tr '\0' ' ' < "$pid/cmdline" 2>/dev/null)
-
-    # check if cmd contains "bash"
-    if [[ $cmd == *bash* ]]; then
-        # get the process name from /comm (or use "bash" if empty)
-        name=$(cat "$pid/comm" 2>/dev/null)
-        [[ -z $name ]] && name="bash"
-        echo "$pid $name"
+    pname=$(<"$pid/comm")
+    if [[ $pname == *bash* ]]; then
+        echo "${pid##*/} $pname"
     fi
 done
