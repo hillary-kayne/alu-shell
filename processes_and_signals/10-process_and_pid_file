@@ -3,12 +3,26 @@
 
 PIDFILE="/var/run/myscript.pid"
 
-trap 'echo "I hate the kill command"' SIGTERM
-trap 'echo "Y U no love me?!"' SIGINT
-trap 'rm -f "$PIDFILE"; exit' SIGQUIT SIGTERM
+# SIGTERM → display message but do NOT exit
+term_handler() {
+    echo "I hate the kill command"
+}
+trap 'term_handler' SIGTERM
 
+# SIGINT (Ctrl+C)
+trap 'echo "Y U no love me?!"' SIGINT
+
+# SIGQUIT → remove PID file and exit
+quit_handler() {
+    rm -f "$PIDFILE"
+    exit
+}
+trap 'quit_handler' SIGQUIT
+
+# Ensure PID file is created
 echo $$ > "$PIDFILE"
 
+# Infinite loop
 while true; do
     echo "To infinity and beyond"
     sleep 2
