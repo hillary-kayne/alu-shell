@@ -1,2 +1,2 @@
 #!/bin/bash
-ps -ef --forest
+ps -auxf
