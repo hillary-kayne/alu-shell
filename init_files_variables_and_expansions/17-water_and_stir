@@ -1,2 +1,2 @@
 #!/bin/bash
-echo $((5#${WATER//[!ewatr]/} + 5#${STIR//[!ti.r]/})) | tr '01234' 'bestc'
+echo "$WATER$STIR"
