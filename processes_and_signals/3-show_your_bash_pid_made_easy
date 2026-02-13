@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# Displays PID and name of processes whose name is "bash" using /proc
+for pid in /proc/[0-9]*; do
+    name=$(cat "$pid/comm" 2>/dev/null)
+    [[ $name == bash ]] && echo "$pid" "$name"
+done
